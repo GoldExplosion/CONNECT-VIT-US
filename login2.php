@@ -114,7 +114,7 @@ button {
     box-shadow: none;
 }
 .button:hover {
-    animation: ani9 0.4s ease-in-out infinite alternate;
+    animation: ani9 0.4s ease-in-out infinite alternate;background-color: skyblue;
 }
 .button1{
 	    display: inline-block;
@@ -149,14 +149,51 @@ button {
         transform: translateY(6px);
     }
 }
+a { text-decoration: none; }
 </style> 
 </head> 
-<body>  
+<body>
+<?php  
+if(isset($_POST["submit"])){  
+  
+if(!empty($_POST['user']) && !empty($_POST['pass'])) {  
+    $user=$_POST['user'];  
+    $pass=$_POST['pass'];  
+  
+    $con=mysqli_connect('localhost','root','') or die(mysqli_error());  
+    mysqli_select_db($con,'user-registration') or die("cannot select DB");  
+  
+    $query=mysqli_query($con,"SELECT * FROM login WHERE username='".$user."' AND password='".$pass."'");  
+    $numrows=mysqli_num_rows($query);  
+    if($numrows!=0)  
+    {  
+    while($row=mysqli_fetch_assoc($query))  
+    {  
+    $dbusername=$row['username'];  
+    $dbpassword=$row['password'];  
+    }  
+  
+    if($user == $dbusername && $pass == $dbpassword)  
+    {  
+    session_start();  
+    $_SESSION['sess_user']=$user;  
+   
+    header("Location: member.php");  
+        echo "Logged in";  }  
+    } else {  
+    echo "Invalid username or password!";  
+    }  
+  
+} else {  
+    echo "All fields are required!";  
+}  
+}  
+?>  
 <div class="overlay">
-<form>
+<form action="" method="POST">
    <div class="con">
    <header class="head-form">
-      <h2>CONNECT</h2><h4><i>A place to connect</i><h4>
+     <h2><a href="http://localhost/pro/login/homepage.php">CONNECT</a></h2><h4><i>A place to connect</i><h4>
       <h2>Login</h2>
    </header>
    <br>
@@ -165,10 +202,10 @@ button {
       <br>
       <input class="form-input" type="password" placeholder="Password" id="txt-input"  name="pass">
       <br>
-      <button class="log-in button1"> Log In </button>
+      <button class="log-in button1" name="submit"> Log In </button>
    </div>
    <div class="other">
-      <button class="btn submits frgt-pass button" formaction="fpw.php">Forgot Password</button>
+      <button class="btn submits frgt-pass button" formaction="fp.php">Forgot Password?</button>
       <button class="btn submits sign-up button" formaction="register2.php">Sign Up 
       <i class="fa fa-user-plus" aria-hidden="true"></i>
       </button>
@@ -177,3 +214,4 @@ button {
 </form>
 </div>
 </body>  
+</html>

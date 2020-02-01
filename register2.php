@@ -100,6 +100,35 @@ button {
     margin: 7% auto;
     letter-spacing: 0.05em;
 }
+a { text-decoration: none; }
+.button1 {
+    display: inline-block;
+    color: #252537;
+  
+    width: 280px;
+    height: 50px;
+  
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    
+    outline: none;
+    border: none;
+  
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s linear;
+    
+    margin: 7% auto;
+    letter-spacing: 0.05em;
+}
+.button1:hover {
+    transform: translatey(3px);
+    box-shadow: none;background-color: skyblue;
+}
+.button1:hover {
+    animation: ani9 0.4s ease-in-out infinite alternate;
+}
 .submits {
     width: 48%;
     display: inline-block;
@@ -108,7 +137,7 @@ button {
 }
 button:hover {
     transform: translatey(3px);
-    box-shadow: none;
+    box-shadow: none;background-color: skyblue;
 }
 button:hover {
     animation: ani9 0.4s ease-in-out infinite alternate;
@@ -175,10 +204,10 @@ button:hover {
 </head> 
 <body>  
 <div class="overlay">
-<form>
+<form action="" method="POST">
    <div class="con">
    <header class="head-form">
-      <h2>CONNECT</h2><h4><i>A place to connect</i><h4>
+      <h2><a href="http://localhost/pro/login/homepage.php">CONNECT</a></h2><h4><i>A place to connect</i><h4>
       <h2>Register here to create your account</h2>
    </header>
    <br>
@@ -191,14 +220,14 @@ button:hover {
       <br>
 	  <input class="form-input" type="text" placeholder="Last Name" id="txt-input"  name="lname">
       <br><br>	
-    <input type="radio" id="test1" name="radio-group" checked>
+    <input type="radio" id="test1" name="gender" value="Male" checked>
     <label for="test1">Male</label>
-    <input type="radio" id="test2" name="radio-group">
+    <input type="radio" id="test2" name="gender" value="Female">
     <label for="test2">Female</label>
-    <input type="radio" id="test3" name="radio-group">
+    <input type="radio" id="test3" name="gender" value="Others">
     <label for="test3">Others</label><br><br>
 	Birthday<br>
-<select name='day' id='dayddl'>
+<select name='date' id='dayddl'>
 <option value='1'>1</option>
 <option value='2'>2</option>
 <option value='3'>3</option>
@@ -361,9 +390,50 @@ button:hover {
 </select><br><br>
 		<input class="form-input" type="email" placeholder="Email" id="txt-input"  name="email">
       <br> 
-      <button class="log-in"> Create Account </button></center><br><br> 
+      <button class="log-in" name="submit"> Create Account </button>
+	  <h4>Already have an account?</h4>
+	  <a href="http://localhost/pro/login/login2.php" class="button1">Click Here</a>
+	  </center><br><br> 
    </div>
   </div>
 </form>
+<?php  
+if(isset($_POST["submit"])){  
+if(!empty($_POST['user']) && !empty($_POST['pass']) && !empty($_POST['fname'])&& !empty($_POST['lname'])&& !empty($_POST['gender'])&& !empty($_POST['email'])&& !empty($_POST['date'])&& !empty($_POST['month'])&& !empty($_POST['year'])) {  
+    $user=$_POST['user'];  
+    $pass=$_POST['pass'];
+	$fn=$_POST['fname'];
+	$ln=$_POST['lname'];
+	$gn=$_POST['gender'];
+	$em=$_POST['email'];
+	$d=$_POST['date'];
+	$m=$_POST['month'];
+	$y=$_POST['year'];
+    $con=mysqli_connect('localhost','root','') or die(mysqli_error());  
+    mysqli_select_db($con,'user-registration') or die("cannot select DB");  
+  
+    $query=mysqli_query($con,"SELECT * FROM login WHERE username='".$user."'");  
+    $numrows=mysqli_num_rows($query);  
+    if($numrows==0)  
+    {  
+    $sql="INSERT INTO login(username,password,fn,ln,gender,email,date,month,year) VALUES('$user','$pass','$fn','$ln','$gn','$em','$d','$m','$y')";  
+  
+    $result=mysqli_query($con,$sql);  
+        if($result){  
+    echo "Account Successfully Created";  
+    } else {  
+    echo "Failure!";  
+    }  
+  
+    } else {  
+    echo "That username already exists! Please try again with another.";  
+    }  
+  
+} else {  
+    echo "All fields are required!";  
+}  
+}  
+?>
 </div>
 </body>  
+</html>
